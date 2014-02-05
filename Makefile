@@ -1,17 +1,16 @@
 CC := gcc
 RM := rm -f
 CFLAGS := -fPIC -O3 -g -Wall -Werror 
-MAJOR := 0
-MINOR := 1
 NAME := networking
-VERSION := $(MAJOR).$(MINOR)
 
-lib: lib$(NAME).so.$(VERSION)
+lib: lib$(NAME).so
 
-lib$(NAME).so.$(VERSION): $(NAME).o
-	$(CC) -shared -Wl,-soname,lib$(NAME).so.$(MAJOR) $^ -o $@
+lib$(NAME).so: $(NAME).o
+	$(CC) -shared -Wl,-soname,lib$(NAME).so $^ -o $@
+
 
 clean:
-	$(RM)  *.o *.so.*
+	$(RM)  *.o *.so
+
 
 
