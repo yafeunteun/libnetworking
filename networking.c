@@ -32,19 +32,18 @@ int die(const char* message)
 *@brief Crée une socket en mode flux attachée à une adresse IPV4.
 *
 *@param char* hostname Le nom de la machine hôte (NULL pour localhost INADDR_ANY).
-*@param char* service Le nom du service (NULL pour laisser le noyau choisir).
+*@param unsigned short port Le port à utiliser (0 pour laisser le noyau choisir).
 *@param char* protocole Le nom du protocole à utiliser.
 *
 *@return int Une socket en mode flux attachée à l'adresse IPV4 correspondant aux paramètres.
 *
 */
-int cree_socket_stream(const char* hostname, const char* service, const char* protocole)
+int cree_socket_stream(const char* hostname, unsigned short port, const char* protocole)
 {
 	int sock;
 	struct sockaddr_in adresse;
 	int taille = sizeof(struct sockaddr_in);
 	struct hostent* hostentry;
-	struct servent* serventry;
 	struct protoent* protoentry;
 
 	
@@ -69,18 +68,8 @@ int cree_socket_stream(const char* hostname, const char* service, const char* pr
 		die("getprotobyname");
 	}
 
-	if(service == NULL){
-		adresse.sin_port = htons(0);
-	}
 
-	else{
-
-		if((serventry = getservbyname(service, protoentry->p_name)) == NULL){
-			die("getservbyname");
-		}
-
-		adresse.sin_port = serventry->s_port;
-	}
+	adresse.sin_port = htons(port);
 
 
 	if((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1){
