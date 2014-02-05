@@ -83,3 +83,28 @@ int cree_socket_stream(const char* hostname, unsigned short port, const char* pr
 
 	return sock;
 }
+
+/**
+*@brief Affiche l'adresse IP est le port utilisé par une socket internet.
+*
+*@param int sock La socket dont on veut afficher l'adresse.
+*
+*@return int EXIT_SUCCES en cas de succès, -1 sinon.
+*
+*/
+int afficher_adresse_socket(int sock)
+{
+	struct sockaddr_in adresse;
+	socklen_t taille;
+
+	taille = sizeof(struct sockaddr_in);
+
+	if((getsockname(sock, (struct sockaddr*)&adresse, &taille)) < 0){
+		die("getsockname");
+	}
+
+	fprintf(stdout, "IP = %s, Port = %u \n", inet_ntoa(adresse.sin_addr), ntohs(adresse.sin_port));
+
+	return EXIT_SUCCESS;
+}
+
